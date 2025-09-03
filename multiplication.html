@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Multiplication Table</title>
+  <style>
+    :root { --bg:#0f172a; --card:#111827; --text:#e5e7eb; --muted:#9ca3af; --accent:#22c55e; }
+    body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);display:grid;place-items:center;min-height:100dvh}
+    .wrap{width:min(680px,92vw);background:var(--card);padding:22px 20px;border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+    h1{margin:0 0 10px;font-size:1.4rem}
+    p.hint{margin:0 0 16px;color:var(--muted);font-size:.95rem}
+    .row{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 18px}
+    input,button,select{border:1px solid #1f2937;background:#0b1220;color:var(--text);padding:10px 12px;border-radius:10px;font-size:1rem}
+    input{flex:1 1 180px}
+    select{width:140px}
+    button{cursor:pointer;border-color:#14532d}
+    button:hover{background:#0d1b2a}
+    .error{color:#fca5a5;margin-top:4px;min-height:1.2em}
+    .out{margin-top:14px;padding:14px 12px;border:1px dashed #334155;border-radius:12px;white-space:pre-wrap;background:#0b1220}
+    .line{padding:3px 0;border-bottom:1px dashed #1f2937}
+    .line:last-child{border-bottom:none}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Multiplication Table</h1>
+    <p class="hint">Enter a number and print its table using a classic <code>for</code> loop.</p>
+
+    <div class="row">
+      <input id="num" type="number" placeholder="Enter a number (e.g., 7)" />
+      <select id="upto">
+        <option value="10" selected>× 1 to 10</option>
+        <option value="12">× 1 to 12</option>
+        <option value="20">× 1 to 20</option>
+      </select>
+      <button id="printBtn">Print Table</button>
+      <button id="clearBtn" title="Clear output">Clear</button>
+    </div>
+    <div id="err" class="error"></div>
+    <div id="out" class="out" aria-live="polite"></div>
+  </div>
+
+  <script>
+    const numEl = document.getElementById('num');
+    const uptoEl = document.getElementById('upto');
+    const outEl = document.getElementById('out');
+    const errEl = document.getElementById('err');
+
+    document.getElementById('printBtn').addEventListener('click', () => {
+      const n = Number(numEl.value);
+      const limit = Number(uptoEl.value);
+
+      // basic validation
+      if (!Number.isFinite(n)) {
+        errEl.textContent = 'Please enter a valid number.';
+        outEl.textContent = '';
+        return;
+      }
+      errEl.textContent = '';
+
+      // build table lines using a classic for-loop (simple and reliable)
+      let lines = [];
+      for (let i = 1; i <= limit; i++) {
+        lines.push(`${n} × ${i} = ${n * i}`);
+      }
+
+      // render
+      outEl.innerHTML = lines.map(l => `<div class="line">${l}</div>`).join('');
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      numEl.value = '';
+      outEl.textContent = '';
+      errEl.textContent = '';
+      numEl.focus();
+    });
+
+    // Quality-of-life: Enter key prints
+    numEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('printBtn').click();
+    });
+  </script>
+</body>
+</html>
